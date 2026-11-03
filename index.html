@@ -6,16 +6,42 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Tuinverwarming — maandevaluatie oktober 2026</title>
 <style>
-  html,body{margin:0;height:100%;background:#0c1a33;color:#fff;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
-  .bar{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#08142a;font-size:14px}
+  :root{--navy:#0c1a33;--bar:#08142a;--red:#e8434f;--gold:#c99a1e;--green:#2e9e5b;--bad:#d93a3a}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--navy);color:#fff;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+  .bar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--bar);font-size:14px}
   .bar b{font-weight:600}.bar .sp{flex:1}
-  .bar a,.bar button{color:#fff;background:#e8434f;border:0;border-radius:6px;padding:7px 12px;font:inherit;text-decoration:none;cursor:pointer}
+  .bar a,.bar button{color:#fff;background:var(--red);border:0;border-radius:6px;padding:7px 12px;font:inherit;text-decoration:none;cursor:pointer}
   .bar button.ghost{background:#1d2c4a}
-  .stage{height:calc(100% - 52px);display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box}
-  .stage img{max-width:100%;max-height:100%;box-shadow:0 8px 30px rgba(0,0,0,.4);background:#fff}
+  .stage{height:calc(100% - 52px);display:flex;align-items:center;justify-content:center;padding:12px}
+  .stage img{max-width:100%;max-height:100%;box-shadow:0 8px 30px rgba(0,0,0,.4);background:#fff;cursor:pointer}
   .grid{display:none;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;padding:16px}
-  .grid img{width:100%;cursor:pointer;border:2px solid transparent}.grid img:hover{border-color:#e8434f}
-  body.overview .stage{display:none}body.overview .grid{display:grid}
+  .grid img{width:100%;cursor:pointer;border:2px solid transparent}.grid img:hover{border-color:var(--red)}
+  body.overview .stage,body.overview .board{display:none!important}body.overview .grid{display:grid}
+  .board{display:none;padding:22px clamp(12px,3vw,40px) 60px;background:#f3f5f9;color:#0c1a33;min-height:calc(100% - 52px)}
+  body.isboard .stage{display:none}body.isboard .board{display:block}
+  .board h1{margin:0 0 6px;font-size:clamp(20px,2.4vw,30px)}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-size:13px;color:#4a5670;margin-bottom:20px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:22px}
+  .card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(12,26,51,.08);position:relative;display:flex;flex-direction:column}
+  .media{position:relative;background:#0c1a33;aspect-ratio:4/5;display:flex;align-items:center;justify-content:center}
+  .media img,.media video{width:100%;height:100%;object-fit:contain;display:block}
+  .media img{cursor:zoom-in}
+  .media .feed{color:#c6d0e4;text-align:center;padding:20px;font-size:15px;line-height:1.4}
+  .tag{position:absolute;top:10px;left:10px;background:rgba(8,20,42,.85);color:#fff;font-size:12px;font-weight:600;padding:4px 8px;border-radius:5px;pointer-events:none}
+  .stamp{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%) rotate(-14deg);border:5px solid var(--bad);color:var(--bad);background:rgba(255,255,255,.88);font-weight:900;font-size:clamp(26px,3vw,38px);letter-spacing:3px;padding:6px 18px;border-radius:8px;pointer-events:none;text-align:center;line-height:1.05;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+  .stamp small{display:block;font-size:12px;letter-spacing:1px;font-weight:700}
+  .info{padding:14px 16px 16px}
+  .name{font-weight:650;font-size:16px;margin:0 0 12px;min-height:2.5em}
+  .roas{display:flex;align-items:baseline;gap:8px;padding:10px 12px;border-radius:8px;margin-bottom:12px;color:#fff;background:#8a94a8}
+  .roas b{font-size:30px;line-height:1}.roas span{font-size:12px;font-weight:700;letter-spacing:1px;opacity:.9}
+  .roas em{margin-left:auto;font-style:normal;font-size:12px;font-weight:700}
+  .gold .roas{background:linear-gradient(135deg,#b8860b,#e6c25a 55%,#b8860b)}.green .roas{background:var(--green)}.red .roas{background:var(--bad)}
+  .m{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:12px;color:#5b6680}
+  .m b{display:block;font-size:17px;color:#0c1a33}
+  .lb{position:fixed;inset:0;background:rgba(5,10,20,.92);display:none;align-items:center;justify-content:center;z-index:20;cursor:zoom-out}
+  .lb.on{display:flex}.lb img{max-width:96vw;max-height:94vh}
 </style>
 </head>
 <body>
@@ -26,19 +52,56 @@
   <a href="Tuinverwarming_oktober_2026_met_ads.pptx" download>Download .pptx</a>
 </div>
 <div class="stage"><img id="slide" alt="Slide"></div>
+<div class="board" id="board"></div>
 <div class="grid" id="grid"></div>
+<div class="lb" id="lb"><img alt=""></div>
 <script>
-const N=32,img=document.getElementById('slide'),cnt=document.getElementById('cnt'),grid=document.getElementById('grid');
+const N=32,BOARDS=[{"slide": 10, "title": "Advertenties oktober — Nederland, per adset  (1/2)", "ads": [{"key": "NL-okt-01_ugc-marit-3000-fiber", "creative": null, "name": "UGC Marit — 3000 watt fiber", "metrics": {"ROAS": "3,46", "AANKOPEN": "159", "KOSTEN": "€10.279", "CTR": "1,77%"}, "video": true}, {"key": "NL-okt-02_wand-25-static-zomer", "creative": null, "name": "Wand 25% korting static — zomer", "metrics": {"ROAS": "3,73", "AANKOPEN": "70", "KOSTEN": "€3.650", "CTR": "0,91%"}, "video": false}, {"key": "NL-okt-03_3000-artikel-25", "creative": null, "name": "3000 watt — Artikel 25% korting", "metrics": {"ROAS": "4,74", "AANKOPEN": "71", "KOSTEN": "€3.348", "CTR": "1,55%"}, "video": false}, {"key": "NL-okt-04_3000-static-vergelijking", "creative": null, "name": "3000 watt — Static vergelijking", "metrics": {"ROAS": "3,75", "AANKOPEN": "35", "KOSTEN": "€2.002", "CTR": "1,42%"}, "video": false}, {"key": null, "creative": "Dynamische productfeed\n(catalogusadvertentie)", "name": "Productfeed — 25% korting beste tuinverwarmers", "metrics": {"ROAS": "3,94", "AANKOPEN": "32", "KOSTEN": "€1.906", "CTR": "1,29%"}, "video": false}, {"key": "NL-okt-06_hugo-dure-overkapping", "creative": null, "name": "Hugo — dure overkapping 25%", "metrics": {"ROAS": "3,94", "AANKOPEN": "31", "KOSTEN": "€1.804", "CTR": "1,69%"}, "video": true}, {"key": null, "creative": "Dynamische productfeed\n(catalogusadvertentie)", "name": "Retargeting — alle bezoekers", "metrics": {"ROAS": "2,34", "AANKOPEN": "24", "KOSTEN": "€1.616", "CTR": "1,69%"}, "video": false}, {"key": "NL-okt-08_hugo-korting-25", "creative": null, "name": "Hugo — korting 25%", "metrics": {"ROAS": "3,49", "AANKOPEN": "17", "KOSTEN": "€943", "CTR": "1,60%"}, "video": true}, {"key": "NL-okt-09_wand-herfstdeals", "creative": null, "name": "Wand static — 25% herfstdeals", "metrics": {"ROAS": "3,45", "AANKOPEN": "11", "KOSTEN": "€613", "CTR": "1,27%"}, "video": false}, {"key": "NL-okt-10_3000-static-beste-6usp", "creative": null, "name": "3000 watt — Static beste + 6 usp", "metrics": {"ROAS": "2,43", "AANKOPEN": "6", "KOSTEN": "€468", "CTR": "1,48%"}, "video": false}]}, {"slide": 11, "title": "Advertenties oktober — Nederland, per adset  (2/2)", "ads": [{"key": "NL-okt-11_3000-static-kracht", "creative": null, "name": "3000 watt — Static kracht", "metrics": {"ROAS": "2,07", "AANKOPEN": "2", "KOSTEN": "€260", "CTR": "1,21%"}, "video": false}, {"key": "NL-okt-12_wand-static-2", "creative": null, "name": "Wand 25% korting static — 2", "metrics": {"ROAS": "2,97", "AANKOPEN": "3", "KOSTEN": "€182", "CTR": "1,38%"}, "video": false}, {"key": "NL-okt-13_3000-static-reviews", "creative": null, "name": "3000 watt — Static reviews", "metrics": {"ROAS": "2,37", "AANKOPEN": "1", "KOSTEN": "€160", "CTR": "1,75%"}, "video": false}, {"key": "NL-okt-14_3000-static-meteen-warm", "creative": null, "name": "3000 watt — Static meteen warm", "metrics": {"ROAS": "0,00", "AANKOPEN": "0", "KOSTEN": "€155", "CTR": "1,57%"}, "video": false}, {"key": "NL-okt-15_krachtig-3k-v2", "creative": null, "name": "Krachtig 3k — versie 2", "metrics": {"ROAS": "1,45", "AANKOPEN": "1", "KOSTEN": "€110", "CTR": "2,15%"}, "video": true}, {"key": "NL-okt-16_test-static-2-zomeravond", "creative": null, "name": "Test — Static 2 verleng zomeravond", "metrics": {"ROAS": "0,00", "AANKOPEN": "0", "KOSTEN": "€52", "CTR": "1,17%"}, "video": false}, {"key": "NL-okt-17_test-static-1-zomeravond", "creative": null, "name": "Test — Static 1 verleng zomeravond", "metrics": {"ROAS": "0,00", "AANKOPEN": "0", "KOSTEN": "€51", "CTR": "1,36%"}, "video": false}]}, {"slide": 13, "title": "Black Friday — Nederland, per adset  (1/2)", "ads": [{"key": "NL-BF-01_2500-static-2", "creative": null, "name": "2500 static 2 — Golden Shadow 2500W", "metrics": {"ROAS": "6,52", "AANKOPEN": "2", "KOSTEN": "€77", "CTR": "1,48%"}, "video": false}, {"key": "NL-BF-02_video-mc-2", "creative": null, "name": "2500 video — Hugo M&C 2", "metrics": {"ROAS": "7,50", "AANKOPEN": "3", "KOSTEN": "€74", "CTR": "2,68%"}, "video": true}, {"key": "NL-BF-03_3000-static-cf-2", "creative": null, "name": "3000 static CF 2 — Carbon Fiber 3000W", "metrics": {"ROAS": "0,00", "AANKOPEN": "0", "KOSTEN": "€73", "CTR": "1,99%"}, "video": false}, {"key": "NL-BF-04_video-diane-2", "creative": null, "name": "3000 video — Hugo Diane 2", "metrics": {"ROAS": "3,31", "AANKOPEN": "1", "KOSTEN": "€72", "CTR": "1,64%"}, "video": true}, {"key": "NL-BF-05_video-mc-3", "creative": null, "name": "2500 video — Hugo M&C 3", "metrics": {"ROAS": "5,37", "AANKOPEN": "2", "KOSTEN": "€72", "CTR": "2,43%"}, "video": true}, {"key": "NL-BF-06_3000-static-cf-1", "creative": null, "name": "3000 static CF 1 — Carbon Fiber 3000W", "metrics": {"ROAS": "2,66", "AANKOPEN": "1", "KOSTEN": "€72", "CTR": "1,56%"}, "video": false}, {"key": "NL-BF-07_video-diane-1", "creative": null, "name": "Wand video — Hugo Diane 1", "metrics": {"ROAS": "0,00", "AANKOPEN": "0", "KOSTEN": "€69", "CTR": "1,52%"}, "video": true}, {"key": "NL-BF-08_3000-static-3-gs", "creative": null, "name": "3000 static 3 — Golden Shadow 3000W", "metrics": {"ROAS": "9,04", "AANKOPEN": "2", "KOSTEN": "€67", "CTR": "2,69%"}, "video": false}, {"key": "NL-BF-09_video-diane-3", "creative": null, "name": "3000 video — Hugo Diane 3", "metrics": {"ROAS": "0,00", "AANKOPEN": "0", "KOSTEN": "€67", "CTR": "1,55%"}, "video": true}, {"key": "NL-BF-10_email", "creative": null, "name": "Algemeen — e-mail ad", "metrics": {"ROAS": "0,00", "AANKOPEN": "0", "KOSTEN": "€67", "CTR": "3,64%"}, "video": false}]}, {"slide": 14, "title": "Black Friday — Nederland, per adset  (2/2)", "ads": [{"key": "NL-BF-11_2500-static-1", "creative": null, "name": "2500 static 1 — Golden Shadow 2500W", "metrics": {"ROAS": "2,62", "AANKOPEN": "1", "KOSTEN": "€65", "CTR": "1,09%"}, "video": false}, {"key": "NL-BF-12_wand-static-2", "creative": null, "name": "Wand static 2 — Wandmodellen 2", "metrics": {"ROAS": "11,24", "AANKOPEN": "4", "KOSTEN": "€63", "CTR": "2,40%"}, "video": false}, {"key": "NL-BF-13_video-mc-1", "creative": null, "name": "2500 video — Hugo M&C 1", "metrics": {"ROAS": "0,00", "AANKOPEN": "0", "KOSTEN": "€61", "CTR": "1,20%"}, "video": true}, {"key": "NL-BF-14_wand-static-1", "creative": null, "name": "Wand static 1 — Wandmodellen 1", "metrics": {"ROAS": "3,34", "AANKOPEN": "1", "KOSTEN": "€60", "CTR": "2,24%"}, "video": false}, {"key": "NL-BF-15_tekststatic-35", "creative": null, "name": "Algemeen — BF tekst-static 35%", "metrics": {"ROAS": "12,35", "AANKOPEN": "4", "KOSTEN": "€52", "CTR": "1,34%"}, "video": false}]}, {"slide": 26, "title": "Advertenties oktober — Duitsland, per adset", "ads": [{"key": "DE-okt-01_static-3000-9-standen", "creative": null, "name": "Static 3000 watt — hook: 9 standen", "metrics": {"ROAS": "4,57", "AANKOPEN": "76", "KOSTEN": "€3.845", "CTR": "1,71%"}, "video": false}, {"key": "DE-okt-02_ugc-alper-vriendengroep", "creative": null, "name": "Wand — UGC Alper vriendengroep", "metrics": {"ROAS": "2,26", "AANKOPEN": "23", "KOSTEN": "€1.830", "CTR": "2,16%"}, "video": true}, {"key": "DE-okt-03_marit-ugc-langere-avond", "creative": null, "name": "3000 watt — UGC Marit, hook: langere avond", "metrics": {"ROAS": "5,89", "AANKOPEN": "24", "KOSTEN": "€1.626", "CTR": "1,70%"}, "video": false}, {"key": null, "creative": "Dynamische productfeed\n(catalogusadvertentie)", "name": "Retargeting — alle producten", "metrics": {"ROAS": "2,51", "AANKOPEN": "10", "KOSTEN": "€845", "CTR": "2,35%"}, "video": false}, {"key": "DE-okt-05_marit-ugc-avond-verlengen", "creative": null, "name": "Wand — UGC Marit, hook: avond verlengen", "metrics": {"ROAS": "1,84", "AANKOPEN": "5", "KOSTEN": "€528", "CTR": "1,45%"}, "video": true}, {"key": "DE-okt-06_wand-static-sfeer-1", "creative": null, "name": "Wand — Static sfeer 1", "metrics": {"ROAS": "1,90", "AANKOPEN": "2", "KOSTEN": "€202", "CTR": "2,01%"}, "video": false}]}, {"slide": 27, "title": "Black Friday — Duitsland, per adset", "ads": [{"key": "DE-BF-01_wand-static-2-korting", "creative": null, "name": "Wand static 2 — korting", "metrics": {"ROAS": "5,12", "AANKOPEN": "1", "KOSTEN": "€78", "CTR": "2,26%"}, "video": false}, {"key": "DE-BF-02_3000-static-1", "creative": null, "name": "3000 static 1 — Golden Shadow 3000W", "metrics": {"ROAS": "7,03", "AANKOPEN": "3", "KOSTEN": "€77", "CTR": "2,15%"}, "video": false}, {"key": "DE-BF-03_3000-static-2", "creative": null, "name": "3000 static 2 — Golden Shadow 3000W", "metrics": {"ROAS": "0,00", "AANKOPEN": "0", "KOSTEN": "€72", "CTR": "1,71%"}, "video": false}, {"key": "DE-BF-04_2500-static-1", "creative": null, "name": "2500 static 1 — Golden Shadow 2500W", "metrics": {"ROAS": "0,00", "AANKOPEN": "0", "KOSTEN": "€68", "CTR": "1,73%"}, "video": false}, {"key": "DE-BF-05_email", "creative": null, "name": "Algemeen — e-mail ad", "metrics": {"ROAS": "0,00", "AANKOPEN": "0", "KOSTEN": "€68", "CTR": "1,78%"}, "video": false}, {"key": "DE-BF-06_wand-static-1-verleng", "creative": null, "name": "Wand static 1 — verleng seizoen", "metrics": {"ROAS": "0,00", "AANKOPEN": "0", "KOSTEN": "€67", "CTR": "2,60%"}, "video": false}, {"key": "DE-BF-07_2500-static-2", "creative": null, "name": "2500 static 2 — Golden Shadow 2500W", "metrics": {"ROAS": "0,00", "AANKOPEN": "0", "KOSTEN": "€67", "CTR": "1,89%"}, "video": false}, {"key": "DE-BF-08_tekststatic-35", "creative": null, "name": "Algemeen — BF tekst-static 35%", "metrics": {"ROAS": "5,49", "AANKOPEN": "1", "KOSTEN": "€62", "CTR": "2,44%"}, "video": false}]}],MIN_SPEND=200;
+const bySlide={};BOARDS.forEach(b=>bySlide[b.slide]=b);
+const img=document.getElementById('slide'),cnt=document.getElementById('cnt'),grid=document.getElementById('grid'),board=document.getElementById('board'),lb=document.getElementById('lb');
 const src=i=>'slides/slide-'+String(i).padStart(2,'0')+'.png';
+const num=s=>parseFloat(String(s||'0').replace(/[€\s.]/g,'').replace(',','.'))||0;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function card(a){
+  const r=num(a.metrics.ROAS),k=num(a.metrics.KOSTEN);
+  const cls=r>=4?'gold':r>=3?'green':'red';
+  const lab=r>=4?'TOPPER':r>=3?'GOED':(k>=MIN_SPEND?'ONDER DOEL':'TE WEINIG DATA');
+  const off=r<3&&k>=MIN_SPEND;
+  let media;
+  if(a.key&&a.video) media=`<video controls playsinline preload="none" poster="creatives/${a.key}.jpg" src="videos/${a.key}.mp4"></video><span class="tag">▶ Video</span>`;
+  else if(a.key) media=`<img loading="lazy" src="creatives/${a.key}.jpg" alt="${esc(a.name)}"><span class="tag">Static</span>`;
+  else media=`<div class="feed">${esc(a.creative).replace(/\n/g,'<br>')}</div>`;
+  if(off) media+=`<div class="stamp">UITZETTEN<small>ROAS ${esc(a.metrics.ROAS)} · ${esc(a.metrics.KOSTEN)} besteed</small></div>`;
+  return `<div class="card ${cls}"><div class="media">${media}</div><div class="info">
+    <p class="name">${esc(a.name)}</p>
+    <div class="roas"><b>${esc(a.metrics.ROAS)}</b><span>ROAS</span><em>${lab}</em></div>
+    <div class="m"><div><b>${esc(a.metrics.KOSTEN)}</b>kosten</div><div><b>${esc(a.metrics.AANKOPEN)}</b>aankopen</div><div><b>${esc(a.metrics.CTR)}</b>CTR</div></div>
+  </div></div>`;
+}
+function renderBoard(b){
+  board.innerHTML=`<h1>${esc(b.title)}</h1>
+  <div class="legend"><span><i style="background:linear-gradient(135deg,#b8860b,#e6c25a)"></i>Goud: ROAS 4 of hoger</span><span><i style="background:var(--green)"></i>Groen: ROAS 3 tot 4</span><span><i style="background:var(--bad)"></i>Rood: onder ROAS 3</span><span><b style="color:var(--bad)">UITZETTEN</b>: onder ROAS 3 en minimaal €${MIN_SPEND} besteed (genoeg data)</span></div>
+  <div class="cards">${b.ads.map(card).join('')}</div>`;
+  board.querySelectorAll('.media img').forEach(el=>el.addEventListener('click',()=>{lb.querySelector('img').src=el.src;lb.classList.add('on');}));
+  board.querySelectorAll('video').forEach(v=>v.addEventListener('play',()=>board.querySelectorAll('video').forEach(o=>{if(o!==v)o.pause();})));
+}
 let i=Math.min(N,Math.max(1,parseInt(location.hash.slice(1))||1));
-function show(n){i=Math.min(N,Math.max(1,n));img.src=src(i);cnt.textContent=i+' / '+N;history.replaceState(null,'','#'+i);document.body.classList.remove('overview');}
+function show(n){
+  i=Math.min(N,Math.max(1,n));cnt.textContent=i+' / '+N;history.replaceState(null,'','#'+i);
+  document.body.classList.remove('overview');board.querySelectorAll('video').forEach(v=>v.pause());
+  if(bySlide[i]){renderBoard(bySlide[i]);document.body.classList.add('isboard');scrollTo(0,0);}
+  else{document.body.classList.remove('isboard');img.src=src(i);}
+}
 for(let k=1;k<=N;k++){const t=document.createElement('img');t.src=src(k);t.loading='lazy';t.alt='Slide '+k;t.addEventListener('click',()=>show(k));grid.appendChild(t);}
 document.getElementById('prev').addEventListener('click',()=>show(i-1));
 document.getElementById('next').addEventListener('click',()=>show(i+1));
 document.getElementById('ov').addEventListener('click',()=>document.body.classList.toggle('overview'));
 img.addEventListener('click',()=>show(i+1));
-addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')show(i+1);if(e.key==='ArrowLeft')show(i-1);});
-let x0=null;addEventListener('touchstart',e=>x0=e.touches[0].clientX);addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>40)show(i+(d<0?1:-1));x0=null;});
+lb.addEventListener('click',()=>lb.classList.remove('on'));
+addEventListener('keydown',e=>{if(e.target.tagName==='VIDEO')return;if(e.key==='Escape')lb.classList.remove('on');if(e.key==='ArrowRight')show(i+1);if(e.key==='ArrowLeft')show(i-1);});
+const st=document.querySelector('.stage');let x0=null;
+st.addEventListener('touchstart',e=>x0=e.touches[0].clientX);
+st.addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>40)show(i+(d<0?1:-1));x0=null;});
 show(i);
 </script>
 </body>
