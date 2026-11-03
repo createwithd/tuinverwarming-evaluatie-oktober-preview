@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Tuinverwarming — maandevaluatie oktober 2026</title>
+<style>
+  html,body{margin:0;height:100%;background:#0c1a33;color:#fff;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+  .bar{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#08142a;font-size:14px}
+  .bar b{font-weight:600}.bar .sp{flex:1}
+  .bar a,.bar button{color:#fff;background:#e8434f;border:0;border-radius:6px;padding:7px 12px;font:inherit;text-decoration:none;cursor:pointer}
+  .bar button.ghost{background:#1d2c4a}
+  .stage{height:calc(100% - 52px);display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box}
+  .stage img{max-width:100%;max-height:100%;box-shadow:0 8px 30px rgba(0,0,0,.4);background:#fff}
+  .grid{display:none;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;padding:16px}
+  .grid img{width:100%;cursor:pointer;border:2px solid transparent}.grid img:hover{border-color:#e8434f}
+  body.overview .stage{display:none}body.overview .grid{display:grid}
+</style>
+</head>
+<body>
+<div class="bar">
+  <b>Tuinverwarming — oktober 2026</b><span id="cnt"></span><span class="sp"></span>
+  <button class="ghost" id="prev">&larr;</button><button class="ghost" id="next">&rarr;</button>
+  <button class="ghost" id="ov">Overzicht</button>
+  <a href="Tuinverwarming_oktober_2026_met_ads.pptx" download>Download .pptx</a>
+</div>
+<div class="stage"><img id="slide" alt="Slide"></div>
+<div class="grid" id="grid"></div>
+<script>
+const N=32,img=document.getElementById('slide'),cnt=document.getElementById('cnt'),grid=document.getElementById('grid');
+const src=i=>'slides/slide-'+String(i).padStart(2,'0')+'.png';
+let i=Math.min(N,Math.max(1,parseInt(location.hash.slice(1))||1));
+function show(n){i=Math.min(N,Math.max(1,n));img.src=src(i);cnt.textContent=i+' / '+N;history.replaceState(null,'','#'+i);document.body.classList.remove('overview');}
+for(let k=1;k<=N;k++){const t=document.createElement('img');t.src=src(k);t.loading='lazy';t.alt='Slide '+k;t.addEventListener('click',()=>show(k));grid.appendChild(t);}
+document.getElementById('prev').addEventListener('click',()=>show(i-1));
+document.getElementById('next').addEventListener('click',()=>show(i+1));
+document.getElementById('ov').addEventListener('click',()=>document.body.classList.toggle('overview'));
+img.addEventListener('click',()=>show(i+1));
+addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')show(i+1);if(e.key==='ArrowLeft')show(i-1);});
+let x0=null;addEventListener('touchstart',e=>x0=e.touches[0].clientX);addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>40)show(i+(d<0?1:-1));x0=null;});
+show(i);
+</script>
+</body>
+</html>
