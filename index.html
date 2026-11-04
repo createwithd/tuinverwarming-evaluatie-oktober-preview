@@ -168,7 +168,6 @@ function renderAvatars(D){
 function renderNew(d){
   const groups=[];d.ads.forEach(a=>{let g=groups.find(x=>x.av===a.av);if(!g)groups.push(g={av:a.av,ads:[]});g.ads.push(a);});
   const nv=d.ads.filter(a=>a.video).length;
-  board.innerHTML=`<div class="kicker">Meta Ads · ${esc(d.land)} · nieuwe set</div><h1>${esc(newTitle(d))}</h1>
   const ht=d.herkomst_telling||{};
   board.innerHTML=`<div class="kicker">Meta Ads · ${esc(d.land)} · nieuwe set</div><h1>${esc(newTitle(d))}</h1>
   <p class="intro">${d.ads.length} nieuwe ${d.aanbod==='BF'?'Black Friday-ads':'evergreen-ads (zonder korting, blijven na Black Friday staan)'}: ${d.ads.length-nv} statisch en ${nv} video. Ingedeeld per advertentieset (avatar). Per ad wissel je tussen <b>Feed 4:5</b> en <b>Story 9:16</b>, en onder <b>Uitleg</b> staat waarom de ad er is, waar de hook vandaan komt en hoe hij gemaakt is.</p>
