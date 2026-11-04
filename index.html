@@ -56,6 +56,14 @@
   .nw .kop{font-weight:650;font-size:15px;margin:0 0 4px}.nw .besch{font-size:13px;color:#5b6680;margin:0}
   .nw .nr{font-size:12px;color:#8a94a8;margin-top:8px}
   .nw .media.st{aspect-ratio:9/16}
+  .nw .kp{display:flex;gap:10px;align-items:center;padding:10px 12px 0}
+  .nw .kp .lg{width:34px;height:34px;border-radius:50%;background:#ff7300;color:#fff;display:grid;place-items:center;font-weight:700}
+  .nw .kp b{display:block;font-size:14px}.nw .kp span{font-size:12px;color:#65676b}
+  .nw .prim{font-size:14px;line-height:1.45;padding:10px 12px;margin:0;color:#1c1e21}
+  .nw .ctab{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;background:#f0f2f5}
+  .nw .ctab small{font-size:11px;color:#65676b;display:block}.nw .ctab b{font-size:15px;display:block;color:#1c1e21}.nw .ctab span{font-size:13px;color:#65676b}
+  .nw .ctab em{flex:none;font-style:normal;background:#e4e6eb;border-radius:6px;padding:8px 14px;font-weight:600;font-size:14px;color:#1c1e21}
+  .nw.story .kp,.nw.story .prim,.nw.story .ctab{display:none}
   .fs{display:flex;gap:6px;padding:10px 12px 0}
   .fs button{font:inherit;font-size:13px;font-weight:600;border:1.5px solid #0c1a33;background:transparent;color:#0c1a33;padding:5px 14px;border-radius:999px;cursor:pointer;min-height:34px}
   .fs button.on{background:#0c1a33;color:#fff}
@@ -138,13 +146,16 @@ function mediaHtml(a,d,f){
 }
 function hkTags(l){return l.replace('(gat)','').split('+').map(s=>s.trim()).filter(Boolean).map(s=>`<span class="hk ${s==='AVATAR'?'av':s==='EIGEN'?'ei':''}">${esc(s)}</span>`).join('');}
 function newCard(a,d,idx){
+  const merk=d.c==='de'?'Terrassenwärme':'Tuinverwarming.com',dom=d.c==='de'?'TERRASSENWAERME.DE':'TUINVERWARMING.COM',sp=d.c==='de'?'Gesponsert':'Gesponsord';
   return `<div class="card nw" data-i="${idx}"><div class="fs"><button class="on" data-f="f">Feed 4:5</button><button data-f="s">Story 9:16</button></div>
-  <div class="media" style="margin-top:10px">${mediaHtml(a,d,'f')}</div><div class="info"><p class="kop">${esc(a.kop)}</p><p class="besch">${esc(a.besch)} · knop: ${esc(a.knop)}</p>
+  <div class="kp"><span class="lg">${merk.charAt(0)}</span><div><b>${merk}</b><span>${sp}</span></div></div>
+  <p class="prim">${esc(a.prim)}</p>
+  <div class="media">${mediaHtml(a,d,'f')}</div>
+  <div class="ctab"><div><small>${dom}</small><b>${esc(a.kop)}</b><span>${esc(a.besch)}</span></div><em>${esc(a.knop)}</em></div><div class="info">
   <details class="ul"><summary>Uitleg: waarom deze ad?</summary><dl>
    <dt>Waarom deze ad</dt><dd>${esc(a.waarom)}</dd>
    <dt>Herkomst hook</dt><dd>${hkTags(a.herkomst)} ${esc(a.bron)}</dd>
    <dt>Hoe gemaakt</dt><dd>${esc(a.hoe)}</dd>
-   <dt>Primaire tekst</dt><dd>${esc(a.prim)}</dd>
    <dt>Landt op</dt><dd>${esc(a.landing)}</dd></dl></details>
   <p class="nr">Ad ${a.nr} in de preview · ${esc(a.id)}</p></div></div>`;
 }
@@ -175,12 +186,12 @@ function renderNew(d){
   <div class="aanpak">${d.aanpak.stappen.map(s=>`<div><b>${esc(s[0])}</b>${esc(s[1])}</div>`).join('')}</div>
   <div class="regels">${d.aanpak.regels.map(r=>`<span>${esc(r)}</span>`).join('')}</div>
   <div class="hkt">Herkomst van de hooks in deze set: <span class="hk av">AVATAR</span> ${ht.AVATAR||0} ads uit het merkboek · <span class="hk ei">EIGEN</span> ${ht.EIGEN||0} ads op basis van eigen winnaars · <span class="hk">CONCURRENT</span> ${ht.CONCURRENT||0} ads uit de Ad Library. Sommige ads combineren twee bronnen.</div>
-  <div class="links"><a href="${d.link}" target="_blank" rel="noopener">Open volledige preview ${d.land} (${d.n_tot} ads) ↗</a><button id="cp">Kopieer link naar deze slide</button></div>
+  <div class="links"><a href="${d.link}${d.aanbod==='BF'?'#blackfriday':'#evergreen'}" target="_blank" rel="noopener">Open de preview: ${d.land} · ${d.aanbod==='BF'?'Black Friday':'Evergreen'} (${d.ads.length} ads) ↗</a><button id="cp">Kopieer link naar deze slide</button></div>
   ${groups.map(g=>`<h2 class="avh">${esc(g.av)}<small>${g.ads.length} ads</small></h2><div class="cards">${g.ads.map(a=>newCard(a,d,d.ads.indexOf(a))).join('')}</div>`).join('')}`;
   const cp=document.getElementById('cp');cp.addEventListener('click',()=>{navigator.clipboard.writeText(location.href).then(()=>{cp.textContent='Link gekopieerd ✓';});});
   board.querySelectorAll('.card.nw').forEach(c=>c.querySelector('.fs').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;
     c.querySelectorAll('.fs button').forEach(x=>x.classList.toggle('on',x===b));const md=c.querySelector('.media');md.querySelectorAll('video').forEach(v=>v.pause());
-    md.innerHTML=mediaHtml(d.ads[+c.dataset.i],d,b.dataset.f);md.classList.toggle('st',b.dataset.f==='s');
+    md.innerHTML=mediaHtml(d.ads[+c.dataset.i],d,b.dataset.f);md.classList.toggle('st',b.dataset.f==='s');c.classList.toggle('story',b.dataset.f==='s');
     md.querySelectorAll('img').forEach(el=>el.addEventListener('click',()=>{lb.querySelector('img').src=el.src;lb.classList.add('on');}));
     md.querySelectorAll('video').forEach(v=>v.addEventListener('play',()=>board.querySelectorAll('video').forEach(o=>{if(o!==v)o.pause();})));}));
   board.querySelectorAll('.media img').forEach(el=>el.addEventListener('click',()=>{lb.querySelector('img').src=el.src;lb.classList.add('on');}));
